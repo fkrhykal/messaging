@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   msg-rabbit-mq:
     container_name: msg_rabbit_mq

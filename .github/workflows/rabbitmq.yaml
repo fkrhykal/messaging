@@ -15,19 +15,22 @@ jobs:
                     - "15672:15672"
                     - "5672:5672"
                 options: >-
-                    --health-cmd="nc -z localhost 5672 || exit 1"
+                    # Use the main AMQP port 5672 for a dial check
+                    --health-cmd="nc -z localhost 5672 || exit 1" 
                     --health-interval=5s
                     --health-timeout=2s
-                    --health-retries=20
+                    --health-retries=40 # Increased retries for stability
             msg-jaeger:
                 image: docker.io/jaegertracing/jaeger:2.12.0
                 ports:
+                    - "16686:16686"
                     - "4317:4317"
                 options: >-
-                    --health-cmd="wget --no-verbose --tries=1 --spider http://localhost:16686/metrics || exit 1"
+                    # Use the OTLP/gRPC port 4317 for a dial check
+                    --health-cmd="nc -z localhost 4317 || exit 1"
                     --health-interval=5s
                     --health-timeout=2s
-                    --health-retries=20
+                    --health-retries=40 # Increased retries for stability
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
