@@ -110,9 +110,9 @@ func (c *rabbitMQConsumer[E]) Close() error {
 type RabbitMQConsumerConfig struct {
 	Tracer            trace.Tracer
 	Conn              *amqp.Connection
-	ExchangeTopicName string
-	QueueName         string
-	BindingKey        string
+	ExchangeTopicName string // kafka topic equivalent
+	QueueName         string // kafka consumer group equivalent
+	BindingKey        string // event_type
 }
 
 func NewRabbitMQConsumer[E contract.Event](config *RabbitMQConsumerConfig) (*rabbitMQConsumer[E], error) {
