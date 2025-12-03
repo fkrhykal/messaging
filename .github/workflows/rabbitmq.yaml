@@ -3,7 +3,7 @@ name: RabbitMQ
 on:
     push:
         branches: ["main"]
-        paths: ["./rabbitmq/**"]
+        paths: ["rabbitmq/**"]
 
 jobs:
     build:
