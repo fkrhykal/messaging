@@ -1,0 +1,16 @@
+services:
+  msg-rabbit-mq:
+    container_name: msg_rabbit_mq
+    image: docker.io/rabbitmq:4.2.1-management-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
+  msg-jaeger:
+    container_name: msg_jaeger
+    image: docker.io/jaegertracing/jaeger:2.12.0
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - LOG_LEVEL=debug

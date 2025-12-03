@@ -1,0 +1,9 @@
+go 1.25.1
+
+use ./rabbitmq
+
+use ./observability
+
+use ./contract
+
+use ./event

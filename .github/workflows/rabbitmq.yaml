@@ -1,0 +1,50 @@
+name: RabbitMQ
+
+on:
+    push:
+        branches: ["main"]
+        paths: ["./rabbitmq/**"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        services:
+            msg-rabbit-mq:
+                image: docker.io/rabbitmq:4.2.1-management-alpine
+                ports:
+                    - "15672:15672"
+                    - "5672:5672"
+                options: >-
+                    --health-cmd="nc -z localhost 5672 || exit 1"
+                    --health-interval=5s
+                    --health-timeout=2s
+                    --health-retries=20
+            msg-jaeger:
+                image: docker.io/jaegertracing/jaeger:2.12.0
+                ports:
+                    - "4317:4317"
+                options: >-
+                    --health-cmd="wget --no-verbose --tries=1 --spider http://localhost:16686/metrics || exit 1"
+                    --health-interval=5s
+                    --health-timeout=2s
+                    --health-retries=20
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.25"
+
+            - name: Set OTel Environment Variables
+              run: |
+                  echo "OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317" >> $GITHUB_ENV
+                  echo "OTEL_EXPORTER_OTLP_PROTOCOL=grpc" >> $GITHUB_ENV
+
+            - name: Run Go tests
+              run: go test ./rabbitmq/... -v
+
+            - name: Run Go build
+              run: go build ./rabbitmq
