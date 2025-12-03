@@ -3,7 +3,6 @@ name: RabbitMQ
 on:
     push:
         branches: ["main"]
-        paths: ["rabbitmq/**"]
 
 jobs:
     build:
@@ -38,13 +37,8 @@ jobs:
               with:
                   go-version: "1.25"
 
-            - name: Set OTel Environment Variables
-              run: |
-                  echo "OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317" >> $GITHUB_ENV
-                  echo "OTEL_EXPORTER_OTLP_PROTOCOL=grpc" >> $GITHUB_ENV
-
             - name: Run Go tests
-              run: go test ./rabbitmq/... -v
+              run: go test github.com/fkrhykal/messaging/rabbitmq -v
 
             - name: Run Go build
               run: go build ./rabbitmq

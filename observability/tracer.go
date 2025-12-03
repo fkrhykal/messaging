@@ -12,6 +12,7 @@ import (
 func NewTracerProvider(ctx context.Context, serviceName string) (*trace.TracerProvider, error) {
 	exporter, err := otlptracegrpc.New(
 		ctx,
+		otlptracegrpc.WithEndpoint("localhost:4317"),
 		otlptracegrpc.WithInsecure(),
 	)
 	if err != nil {
